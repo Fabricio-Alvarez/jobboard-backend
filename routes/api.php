@@ -17,11 +17,18 @@ Route::post('login', [AuthController::class, 'login']);
 
 
 
-
+// Rutas de la API para las ofertas de trabajo
 Route::middleware('auth:sanctum')->group(function () {
-    // Ruta para crear una oferta laboral
-    Route::post('/job-offers', [JobOfferController::class, 'create']);  // Solo accesible para reclutadores
+    // Crear
+    Route::post('/job-offers', [JobOfferController::class, 'create']);
 
-    // Ruta para listar las ofertas laborales
+    // Listar
     Route::get('/job-offers', [JobOfferController::class, 'index']);
+
+    // Actualizar
+    Route::put('/job-offers/{id}', [JobOfferController::class, 'update']);
+    Route::patch('/job-offers/{id}', [JobOfferController::class, 'update']);
+
+    // Eliminar
+    Route::delete('/job-offers/{id}', [JobOfferController::class, 'destroy']);
 });
