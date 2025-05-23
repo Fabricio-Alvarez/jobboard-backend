@@ -103,4 +103,13 @@ class JobOfferController extends Controller
             'message' => 'Oferta eliminada con éxito'
         ], 200);
     }
+
+/**
+ * Listar **todas** las ofertas (para candidatos, sin importar el reclutador).
+ */
+     public function all()
+    {
+        $offers = JobOffer::all();
+        return response()->json($offers);
+    }
 }

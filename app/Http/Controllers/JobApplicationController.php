@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\JobApplication;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
+
+class JobApplicationController extends Controller
+{
+    /**
+     * Listar las postulaciones del usuario autenticado.
+     */
+    public function index()
+    {
+        $apps = JobApplication::with('jobOffer')
+            ->where('user_id', Auth::id())
+            ->get();
+
+        return response()->json($apps);
+    }
+
+    /**
+     * Guardar una nueva postulación.
+     */
+    public function store(Request $request)
+    {
+        // Validaciones
+        $request->validate([
+            'job_offer_id' => 'required|exists:job_offers,id',
+            'message'      => 'nullable|string|max:500',
+        ]);
+
+        try {
+            // ¿Ya postuló este usuario a esta oferta?
+            $exists = JobApplication::where('user_id', Auth::id())
+                ->where('job_offer_id', $request->job_offer_id)
+                ->exists();
+
+            if ($exists) {
+                return response()->json([
+                    'message' => 'Ya te has postulado a esta oferta'
+                ], 409);
+            }
+
+            // Crear la postulación
+            $app = JobApplication::create([
+                'user_id'      => Auth::id(),
+                'job_offer_id' => $request->job_offer_id,
+                'message'      => $request->message,
+                'status'       => 'pending',             // default en la BD
+            ]);
+
+            return response()->json([
+                'message'     => 'Postulación enviada con éxito',
+                'application' => $app->load('jobOffer'),
+            ], 201);
+
+        } catch (QueryException $e) {
+            // Error en la consulta SQL (FK, null not allowed, etc.)
+            return response()->json([
+                'error'   => 'QueryException',
+                'details' => $e->getMessage(),
+            ], 500);
+        } catch (\Throwable $e) {
+            // Cualquier otra excepción
+            return response()->json([
+                'error'   => 'Exception',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Eliminar una postulación propia.
+     */
+    public function destroy($id)
+    {
+        $app = JobApplication::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $app->delete();
+
+        return response()->json([
+            'message' => 'Postulación eliminada correctamente'
+        ]);
+    }
+}

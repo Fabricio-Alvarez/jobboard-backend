@@ -34,4 +34,9 @@ class User extends Authenticatable
     {
         return $this->role == self::ROLE_RECRUITER;
     }
+
+    public function applications()
+{
+    return $this->hasMany(JobApplication::class);
+}
 }
