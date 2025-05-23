@@ -26,7 +26,7 @@ class JobApplicationController extends Controller
      */
     public function store(Request $request)
     {
-        // Validaciones
+      
         $request->validate([
             'job_offer_id' => 'required|exists:job_offers,id',
             'message'      => 'nullable|string|max:500',
@@ -44,12 +44,12 @@ class JobApplicationController extends Controller
                 ], 409);
             }
 
-            // Crear la postulación
+          
             $app = JobApplication::create([
                 'user_id'      => Auth::id(),
                 'job_offer_id' => $request->job_offer_id,
                 'message'      => $request->message,
-                'status'       => 'pending',             // default en la BD
+                'status'       => 'pending',          
             ]);
 
             return response()->json([
@@ -58,13 +58,12 @@ class JobApplicationController extends Controller
             ], 201);
 
         } catch (QueryException $e) {
-            // Error en la consulta SQL (FK, null not allowed, etc.)
+    
             return response()->json([
                 'error'   => 'QueryException',
                 'details' => $e->getMessage(),
             ], 500);
         } catch (\Throwable $e) {
-            // Cualquier otra excepción
             return response()->json([
                 'error'   => 'Exception',
                 'details' => $e->getMessage(),

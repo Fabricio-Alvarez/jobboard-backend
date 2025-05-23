@@ -37,6 +37,8 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 // ----------------------------------------------------------------------------
 
+
+// Rutas para los candidatos
 Route::middleware('auth:sanctum')->group(function () {
     // Ofertas
     Route::get('/job-offers/all', [JobOfferController::class, 'all']);
