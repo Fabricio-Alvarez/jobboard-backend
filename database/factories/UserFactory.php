@@ -13,7 +13,7 @@ class UserFactory extends Factory
     {
         return [
             'email' => $this->faker->unique()->safeEmail,
-            'password' => bcrypt('password123'),  // Contraseña por defecto
+            'password' => bcrypt('password123'),
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
             'role' => $this->faker->randomElement([User::ROLE_CANDIDATE, User::ROLE_RECRUITER]),
