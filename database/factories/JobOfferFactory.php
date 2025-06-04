@@ -18,7 +18,7 @@ class JobOfferFactory extends Factory
             'location' => $this->faker->city(),
             'salary' => $this->faker->numberBetween(3000, 10000),
             'category' => $this->faker->word(),
-            'user_id' => User::factory(),  // Relacionamos la oferta con un usuario existente
+            'user_id' => User::factory(),
         ];
     }
 }
