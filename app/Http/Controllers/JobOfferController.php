@@ -112,4 +112,34 @@ class JobOfferController extends Controller
         $offers = JobOffer::all();
         return response()->json($offers);
     }
+
+
+    /**
+ * Buscar ofertas de trabajo por categoría y ubicación.
+ */
+public function search(Request $request)
+{
+    $validated = $request->validate([
+        'location' => 'nullable|string|max:255',
+        'category' => 'nullable|string|max:255',
+     
+    ]);
+
+    $query = JobOffer::query();
+   
+   
+    if ($validated['location']) {
+        $query->where('location', 'like', '%' . $validated['location'] . '%');
+    }
+    if ($validated['category']) {
+        $query->where('category', 'like', '%' . $validated['category'] . '%');
+    }
+
+   
+
+    $jobOffers = $query->get();
+
+    return response()->json($jobOffers);
+}
+
 }

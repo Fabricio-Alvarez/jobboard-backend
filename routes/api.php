@@ -34,6 +34,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Eliminar
     Route::delete('/job-offers/{id}', [JobOfferController::class, 'destroy']);
+
+    //Filtrar ofertas de trabajo por categoría y ubicación
+    Route::get('/job-offers/search', [JobOfferController::class, 'search']);
 });
 // ----------------------------------------------------------------------------
 
