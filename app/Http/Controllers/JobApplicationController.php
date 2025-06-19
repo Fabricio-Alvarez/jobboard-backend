@@ -9,9 +9,6 @@ use Illuminate\Database\QueryException;
 
 class JobApplicationController extends Controller
 {
-    /**
-     * Listar las postulaciones del usuario autenticado.
-     */
     public function index()
     {
         $apps = JobApplication::with('jobOffer')
@@ -21,12 +18,9 @@ class JobApplicationController extends Controller
         return response()->json($apps);
     }
 
-    /**
-     * Guardar una nueva postulación.
-     */
     public function store(Request $request)
     {
-      
+
         $request->validate([
             'job_offer_id' => 'required|exists:job_offers,id',
             'message'      => 'nullable|string|max:500',
@@ -44,12 +38,12 @@ class JobApplicationController extends Controller
                 ], 409);
             }
 
-          
+
             $app = JobApplication::create([
                 'user_id'      => Auth::id(),
                 'job_offer_id' => $request->job_offer_id,
                 'message'      => $request->message,
-                'status'       => 'pending',          
+                'status'       => 'pendiente',
             ]);
 
             return response()->json([
@@ -58,7 +52,7 @@ class JobApplicationController extends Controller
             ], 201);
 
         } catch (QueryException $e) {
-    
+
             return response()->json([
                 'error'   => 'QueryException',
                 'details' => $e->getMessage(),
@@ -71,9 +65,7 @@ class JobApplicationController extends Controller
         }
     }
 
-    /**
-     * Eliminar una postulación propia.
-     */
+
     public function destroy($id)
     {
         $app = JobApplication::where('id', $id)

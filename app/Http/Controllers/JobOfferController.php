@@ -36,18 +36,13 @@ class JobOfferController extends Controller
         ], 201);
     }
 
-    /**
-     * Listar las ofertas laborales del usuario autenticado.
-     */
+
     public function index(Request $request)
     {
         $jobOffers = JobOffer::where('user_id', Auth::id())->get();
         return response()->json($jobOffers);
     }
 
-    /**
-     * Actualizar una oferta de trabajo específica si pertenece al reclutador.
-     */
     public function update(Request $request, $id)
     {
         // 1) Validar datos
@@ -84,9 +79,6 @@ class JobOfferController extends Controller
         ], 200);
     }
 
-    /**
-     * Eliminar una oferta de trabajo específica si pertenece al reclutador.
-     */
     public function destroy($id)
     {
         $offer = JobOffer::findOrFail($id);
@@ -104,42 +96,38 @@ class JobOfferController extends Controller
         ], 200);
     }
 
-/**
- * Listar **todas** las ofertas (para candidatos, sin importar el reclutador).
- */
-     public function all()
+  
+    public function all()
     {
         $offers = JobOffer::all();
         return response()->json($offers);
     }
 
 
-    /**
- * Buscar ofertas de trabajo por categoría y ubicación.
- */
-public function search(Request $request)
-{
-    $validated = $request->validate([
-        'location' => 'nullable|string|max:255',
-        'category' => 'nullable|string|max:255',
-     
-    ]);
 
-    $query = JobOffer::query();
-   
-   
-    if ($validated['location']) {
-        $query->where('location', 'like', '%' . $validated['location'] . '%');
+    public function search(Request $request)
+    {
+        $validated = $request->validate([
+            'location' => 'nullable|string|max:255',
+            'category' => 'nullable|string|max:255',
+
+        ]);
+
+        $query = JobOffer::query();
+
+
+        if ($validated['location']) {
+            $query->where('location', 'like', '%' . $validated['location'] . '%');
+        }
+        if ($validated['category']) {
+            $query->where('category', 'like', '%' . $validated['category'] . '%');
+        }
+
+
+
+        $jobOffers = $query->get();
+
+        return response()->json($jobOffers);
     }
-    if ($validated['category']) {
-        $query->where('category', 'like', '%' . $validated['category'] . '%');
-    }
-
-   
-
-    $jobOffers = $query->get();
-
-    return response()->json($jobOffers);
-}
 
 }

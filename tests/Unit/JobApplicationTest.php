@@ -16,11 +16,11 @@ class JobApplicationTest extends TestCase
     #[Test]
     public function it_can_create_a_job_application()
     {
-     
+
         $user = User::factory()->create();
         $jobOffer = JobOffer::factory()->create();
 
-        
+
         $application = JobApplication::create([
             'user_id' => $user->id,
             'job_offer_id' => $jobOffer->id,

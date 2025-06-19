@@ -8,7 +8,8 @@ use Laravel\Sanctum\HasApiTokens;
 
 class JobOffer extends Model
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory;
+    use HasApiTokens;
 
     protected $fillable = [
         'job_title',
@@ -27,7 +28,7 @@ class JobOffer extends Model
 
 
     public function applications()
-{
-    return $this->hasMany(JobApplication::class);
-}
+    {
+        return $this->hasMany(JobApplication::class);
+    }
 }
