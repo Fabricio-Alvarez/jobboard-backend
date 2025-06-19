@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class JobOfferController extends Controller
 {
- 
+
     public function create(Request $request)
     {
         $validated = $request->validate([
@@ -43,6 +43,7 @@ class JobOfferController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $validated = $request->validate([
             'job_title'   => 'required|string|max:255',
             'description' => 'required|string',
@@ -51,7 +52,12 @@ class JobOfferController extends Controller
             'category'    => 'required|string|max:255',
         ]);
 
+
         $offer = JobOffer::findOrFail($id);
+
+
+        $offer = JobOffer::findOrFail($id);
+
 
         if ($offer->user_id !== Auth::id()) {
             return response()->json([

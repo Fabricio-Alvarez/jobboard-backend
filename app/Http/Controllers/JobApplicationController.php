@@ -27,6 +27,7 @@ class JobApplicationController extends Controller
         ]);
 
         try {
+
             $exists = JobApplication::where('user_id', Auth::id())
                 ->where('job_offer_id', $request->job_offer_id)
                 ->exists();

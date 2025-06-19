@@ -9,19 +9,20 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory;
+    use HasApiTokens;
 
     protected $fillable = [
-        'email', 
-        'password', 
-        'first_name', 
+        'email',
+        'password',
+        'first_name',
         'last_name',
         'role',
     ];
 
     // Definir los roles
-    const ROLE_CANDIDATE = 1;  
-    const ROLE_RECRUITER = 2;  
+    public const ROLE_CANDIDATE = 1;
+    public const ROLE_RECRUITER = 2;
 
     // Verificar si es candidato
     public function isCandidate()
@@ -33,5 +34,10 @@ class User extends Authenticatable
     public function isRecruiter()
     {
         return $this->role == self::ROLE_RECRUITER;
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(JobApplication::class);
     }
 }
