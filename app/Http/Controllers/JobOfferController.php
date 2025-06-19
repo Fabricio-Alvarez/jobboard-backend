@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class JobOfferController extends Controller
 {
-    /**
-     * Crear una nueva oferta de trabajo.
-     */
+
     public function create(Request $request)
     {
         $validated = $request->validate([
@@ -45,7 +43,7 @@ class JobOfferController extends Controller
 
     public function update(Request $request, $id)
     {
-        // 1) Validar datos
+
         $validated = $request->validate([
             'job_title'   => 'required|string|max:255',
             'description' => 'required|string',
@@ -54,17 +52,19 @@ class JobOfferController extends Controller
             'category'    => 'required|string|max:255',
         ]);
 
-        // 2) Buscar oferta o fallo 404
+
         $offer = JobOffer::findOrFail($id);
 
-        // 3) Verificar propietario
+
+        $offer = JobOffer::findOrFail($id);
+
+
         if ($offer->user_id !== Auth::id()) {
             return response()->json([
                 'message' => 'No tienes permiso para editar esta oferta'
             ], 403);
         }
 
-        // 4) Actualizar
         $offer->update([
             'job_title'   => $validated['job_title'],
             'description' => $validated['description'],
